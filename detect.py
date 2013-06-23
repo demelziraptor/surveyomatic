@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(12, GPIO.OUT, initial=GPIO.HIGH)
-if GPIO.input(channel):
+if GPIO.input(11):
     print('Input was HIGH')
 else:
     print('Input was LOW')
