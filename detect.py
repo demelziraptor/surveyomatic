@@ -13,18 +13,12 @@ GPIO.setup(LED, GPIO.OUT)
 
 # Create functions to run when the buttons are pressed
 def Input_1(channel):
-    # Put whatever Button 1 does in here
-    print 'Button 1'
     GPIO.output(LED, True);
     
 def Input_2(channel):
-    # Put whatever Button 2 does in here
-    print 'Button 2'
     GPIO.output(LED, False);
     
 def Input_3(channel):
-    # Put whatever Button 3 does in here
-    print 'Button 3'
     GPIO.cleanup();
 
 # Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce for 300 ms to avoid triggering it multiple times a second
