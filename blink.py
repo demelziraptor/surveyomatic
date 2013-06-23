@@ -2,15 +2,15 @@ import RPi.GPIO as GPIO ## Import GPIO library
 import time ## Import 'time' library. Allows us to use 'sleep'
 
 GPIO.setmode(GPIO.BOARD) ## Use board pin numbering
-GPIO.setup(8, GPIO.OUT) ## Setup GPIO Pin 7 to OUT
+GPIO.setup(12, GPIO.OUT) ## Setup GPIO Pin 12 to OUT
 
 ##Define a function named Blink()
 def Blink(numTimes,speed):
   for i in range(0,numTimes):## Run loop numTimes
     print "Iteration " + str(i+1)## Print current loop
-    GPIO.output(8,True)## Switch on pin 7
+    GPIO.output(12,True)## Switch on pin 12
     time.sleep(speed)## Wait
-    GPIO.output(8,False)## Switch off pin 7
+    GPIO.output(12,False)## Switch off pin 12
     time.sleep(speed)## Wait
     print "Done" ## When loop is complete, print "Done"
 GPIO.cleanup()
