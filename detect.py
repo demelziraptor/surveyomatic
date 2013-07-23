@@ -8,9 +8,9 @@ BUTTON2 = 16
 BUTTON3 = 11
 LED = 12
 # Set our input pins to be an input, with internal pullup resistor on
-GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(BUTTON3, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(BUTTON3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 # Set our output pin to be an output
 GPIO.setup(LED, GPIO.OUT)
 GPIO.output(LED, True)
