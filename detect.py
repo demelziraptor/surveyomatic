@@ -4,13 +4,13 @@ import RPi.GPIO as GPIO # Allows us to call our GPIO pins and names it just GPIO
 GPIO.setmode(GPIO.BOARD)  # Set's GPIO pins to BOARD GPIO numbering
 # Define component pins
 BUTTON1 = 15
-BUTTON2 = 16
-BUTTON3 = 11
+BUTTON2 = 11
+BUTTON3 = 16
 LED = 12
 # Set our input pins to be an input, with internal pullup resistor on
-GPIO.setup(BUTTON1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(BUTTON2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(BUTTON3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(BUTTON1, GPIO.IN)
+GPIO.setup(BUTTON2, GPIO.IN)
+GPIO.setup(BUTTON3, GPIO.IN)
 # Set our output pin to be an output
 GPIO.setup(LED, GPIO.OUT)
 GPIO.output(LED, True)
@@ -35,8 +35,8 @@ def B3A(channel):
     GPIO.output(LED, True);
 
 # Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce for 300 ms to avoid triggering it multiple times a second
-GPIO.add_event_detect(BUTTON1, GPIO.RISING, callback=B1A, bouncetime=300) 
-GPIO.add_event_detect(BUTTON2, GPIO.RISING, callback=B2A, bouncetime=300)
+GPIO.add_event_detect(BUTTON1, GPIO.BOTH, callback=B1A, bouncetime=300) 
+GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=300)
 GPIO.add_event_detect(BUTTON3, GPIO.RISING, callback=B3A, bouncetime=300)
 
 # Start a loop that never ends
