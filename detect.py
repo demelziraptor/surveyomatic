@@ -18,26 +18,26 @@ GPIO.output(LED, True)
 # Create functions to run when the buttons are pressed
 def B1A(channel):
     GPIO.output(LED, False);
-    print ('Button 1');
-    sleep(5);
+    print ('Button 1!');
+    sleep(0);
     GPIO.output(LED, True);
     
 def B2A(channel):
     GPIO.output(LED, False);
     print ('Button 2');
-    sleep(5);
+    sleep(0);
     GPIO.output(LED, True);
     
 def B3A(channel):
     GPIO.output(LED, False);
     print ('Button 3');
-    sleep(5);
+    sleep(0);
     GPIO.output(LED, True);
 
 # Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce for 300 ms to avoid triggering it multiple times a second
-GPIO.add_event_detect(BUTTON1, GPIO.BOTH, callback=B1A, bouncetime=300) 
-GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=300)
-GPIO.add_event_detect(BUTTON3, GPIO.RISING, callback=B3A, bouncetime=300)
+GPIO.add_event_detect(BUTTON1, GPIO.FALLING, callback=B1A, bouncetime=500) 
+GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=500)
+GPIO.add_event_detect(BUTTON3, GPIO.FALLING, callback=B3A, bouncetime=500)
 
 # Start a loop that never ends
 while True:
