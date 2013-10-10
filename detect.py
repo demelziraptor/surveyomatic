@@ -44,9 +44,9 @@ def B3A(channel):
      GPIO.output(LED, True);
 
 # Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce to avoid triggering it multiple times a second
-GPIO.add_event_detect(BUTTON1, GPIO.FALLING, callback=B1A, bouncetime=500) 
-GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=500)
-GPIO.add_event_detect(BUTTON3, GPIO.FALLING, callback=B3A, bouncetime=500)
+GPIO.add_event_detect(BUTTON1, GPIO.FALLING, callback=B1A, bouncetime=5000) 
+GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=5000)
+GPIO.add_event_detect(BUTTON3, GPIO.FALLING, callback=B3A, bouncetime=5000)
 
 # Start a loop that never ends
 while True:
