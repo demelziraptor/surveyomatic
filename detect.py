@@ -17,7 +17,7 @@ GPIO.output(LED, True)
 
 # Create functions to run when the buttons are pressed
 def B1A(channel):
-    print (int(GPIO.input(BUTTON2));
+    print (int(GPIO.input(BUTTON2)));
     if ( int(GPIO.input(BUTTON2)) or int(GPIO.input(BUTTON3)) ):
      return;
     else:
@@ -44,7 +44,7 @@ def B3A(channel):
      sleep(0);
      GPIO.output(LED, True);
 
-# Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce for 300 ms to avoid triggering it multiple times a second
+# Wait for Button 1 to be pressed, run the function in "callback" when it does, also software debounce to avoid triggering it multiple times a second
 GPIO.add_event_detect(BUTTON1, GPIO.FALLING, callback=B1A, bouncetime=500) 
 GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=500)
 GPIO.add_event_detect(BUTTON3, GPIO.FALLING, callback=B3A, bouncetime=500)
