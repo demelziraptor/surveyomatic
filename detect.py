@@ -32,7 +32,6 @@ def B2A(channel):
     print (int(GPIO.input(BUTTON1)));
     print (int(GPIO.input(BUTTON2)));
     print (int(GPIO.input(BUTTON3)));
-    print (int(GPIO.input(BUTTON1)) int(GPIO.input(BUTTON2)) int(GPIO.input(BUTTON3)));
     if ( int(GPIO.input(BUTTON1)) < 1 or int(GPIO.input(BUTTON3)) < 1 ):
      return;
     else:
@@ -45,7 +44,6 @@ def B3A(channel):
     print (int(GPIO.input(BUTTON1)));
     print (int(GPIO.input(BUTTON2)));
     print (int(GPIO.input(BUTTON3)));
-    print (int(GPIO.input(BUTTON1)) int(GPIO.input(BUTTON2)) int(GPIO.input(BUTTON3)));
     if ( int(GPIO.input(BUTTON1)) < 1 or int(GPIO.input(BUTTON2)) < 1 ):
      return;
     else:
