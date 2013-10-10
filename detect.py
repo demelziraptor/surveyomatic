@@ -17,7 +17,7 @@ GPIO.output(LED, True)
 
 # Create functions to run when the buttons are pressed
 def B1A(channel):
-    if ( int(GPIO.input(BUTTON2)) = 0 or int(GPIO.input(BUTTON3)) = 0 ):
+    if ( int(GPIO.input(BUTTON2)) == 0 or int(GPIO.input(BUTTON3)) == 0 ):
      return;
     else:
      GPIO.output(LED, False);
