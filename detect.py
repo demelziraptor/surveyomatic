@@ -1,6 +1,6 @@
 from time import sleep  # Allows us to call the sleep function to slow down our loop
 import RPi.GPIO as GPIO # Allows us to call our GPIO pins and names it just GPIO
- 
+GPIO.cleanup()
 GPIO.setmode(GPIO.BOARD)  # Set's GPIO pins to BOARD GPIO numbering
 # Define component pins
 BUTTON1 = 15
