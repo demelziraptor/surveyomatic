@@ -12,58 +12,36 @@ LED = 12
 class Main():
 
     def __init__(self):
+        self.buttons = [BUTTON1, BUTTON2, BUTTON3]
+        self.button_names = {BUTTON1: 'green', BUTTON2: 'yellow', BUTTON3: 'red'}
         setup_GPIO()
 
     def setup_GPIO(self):
         GPIO.cleanup()
-        GPIO.setmode(GPIO.BOARD)  # Set's GPIO pins to BOARD GPIO numbering
-        # Set our input pins to be an input, with internal pullup resistor on
-        GPIO.setup(BUTTON1, GPIO.IN)
-        GPIO.setup(BUTTON2, GPIO.IN)
-        GPIO.setup(BUTTON3, GPIO.IN)
-        # Set our output pin to be an output
+        # Set's GPIO pins to BOARD GPIO numbering
+        GPIO.setmode(GPIO.BOARD)
+        # Setup inputs and outputs
+        for button in self.buttons:
+            GPIO.setup(button, GPIO.IN)
         GPIO.setup(LED, GPIO.OUT)
+        # Set initial LED state
         GPIO.output(LED, True)        
         # Add button callbacks and software debounce to avoid triggering it multiple times a second
-        GPIO.add_event_detect(BUTTON1, GPIO.FALLING, callback=B1A, bouncetime=5000) 
-        GPIO.add_event_detect(BUTTON2, GPIO.FALLING, callback=B2A, bouncetime=5000)
-        GPIO.add_event_detect(BUTTON3, GPIO.FALLING, callback=B3A, bouncetime=5000)
+        for button in self.buttons:
+            GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
         
-    def B1A(self, channel):
-        print (int(GPIO.input(BUTTON1)))
-        print (int(GPIO.input(BUTTON2)))
-        print (int(GPIO.input(BUTTON3)))
-        if ( int(GPIO.input(BUTTON2)) < 1 or int(GPIO.input(BUTTON3)) < 1 ):
+    def handle_button_press(self, channel):
+        print_button_states()
+        if not GPIO.input(LED):
             return
-        else:
-            GPIO.output(LED, False)
-            print ('Button 1')
-            sleep(0)
-            GPIO.output(LED, True)
-        
-    def B2A(self, channel):
-        print (int(GPIO.input(BUTTON1)))
-        print (int(GPIO.input(BUTTON2)))
-        print (int(GPIO.input(BUTTON3)))
-        if ( int(GPIO.input(BUTTON1)) < 1 or int(GPIO.input(BUTTON3)) < 1 ):
-            return
-        else:
-            GPIO.output(LED, False)
-            print ('Button 2')
-            sleep(0)
-            GPIO.output(LED, True)
-        
-    def B3A(self, channel):
-        print (int(GPIO.input(BUTTON1)))
-        print (int(GPIO.input(BUTTON2)))
-        print (int(GPIO.input(BUTTON3)))
-        if ( int(GPIO.input(BUTTON1)) < 1 or int(GPIO.input(BUTTON2)) < 1 ):
-            return
-        else:
-            GPIO.output(LED, False)
-            print ('Button 3')
-            sleep(0)
-            GPIO.output(LED, True)
+        GPIO.output(LED, False) 
+        print "You pressed the {colour} button".format(colour = self.button_names[channel])
+        sleep(10)
+        GPIO.output(LED, True)
+         
+    def print_button_states(self):
+        for button in self.buttons:
+            print int(GPIO.input(button))
 
 
 if __name__ == '__main__':
