@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from datetime import datetime
+from threading import Timer
 
 
 # Define component pins
@@ -16,9 +17,10 @@ LOGGING = True
 class Main():
 
     def __init__(self):
+        print 'in main'
         self.buttons = [BUTTON1, BUTTON2, BUTTON3]
         self.button_names = {BUTTON1: 'green', BUTTON2: 'yellow', BUTTON3: 'red'}
-        setup_GPIO()
+        self.setup_GPIO()
 
     def setup_GPIO(self):
         GPIO.cleanup()
@@ -35,16 +37,22 @@ class Main():
             GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
         
     def handle_button_press(self, channel):
-        self.print_button_states()
         if not GPIO.input(LED):
+            print 'light is on already, skipping button press'
             return
-        GPIO.output(LED, False)
+        print 'light is off, registering button press'
+        self.change_LED_state()
         button_name = self.button_names[channel]
         self.log_button_press(button_name)
         print "You pressed the {bn} button".format(bn = button_name)
-        sleep(10)
-        GPIO.output(LED, True)
+        Timer(10, self.change_LED_state).start()
          
+    def change_LED_state(self):
+        if GPIO.input(LED):
+            GPIO.output(LED, False)
+        else:
+            GPIO.output(LED, True)
+
     def print_button_states(self):
         for button in self.buttons:
             print int(GPIO.input(button))
@@ -62,11 +70,12 @@ class Main():
 
 
 if __name__ == '__main__':
+    print 'starting'
     try:
         Main()
         while True:
             sleep(60)
     except:
-        pass
+        raise
     finally:
         GPIO.cleanup()
