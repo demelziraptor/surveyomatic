@@ -32,10 +32,18 @@ class Main():
         GPIO.setup(LED, GPIO.OUT, initial=self.ledstate)
         # Add button callbacks and software debounce to avoid triggering it multiple times a second
         for button in self.buttons:
-            GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
-        
+            GPIO.add_event_detect(button, GPIO.FALLING)
+        self.setup_event_detects()
+    
+    def setup_event_detects(self):
+        if GPIO.event_detected(BUTTON1):
+            self.handle_button_press(BUTTON1)
+        if GPIO.event_detected(BUTTON2):
+            self.handle_button_press(BUTTON2)
+        if GPIO.event_detected(BUTTON3):
+            self.handle_button_press(BUTTON3)
+
     def handle_button_press(self, channel):
-        sleep(1)
         if not self.ledstate:
             print 'light is on already, skipping button press'
             return
