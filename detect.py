@@ -11,33 +11,31 @@ BUTTON3 = 16
 LED = 12
 
 # Logging control
-LOGGING = True
-    
-    
+LOGGING = False
+
+
 class Main():
 
     def __init__(self):
-        print 'in main'
+        # Keep track of LED state (as GPIO.input not working)
+        self.ledstate = True
         self.buttons = [BUTTON1, BUTTON2, BUTTON3]
         self.button_names = {BUTTON1: 'green', BUTTON2: 'yellow', BUTTON3: 'red'}
         self.setup_GPIO()
 
     def setup_GPIO(self):
-        GPIO.cleanup()
         # Set's GPIO pins to BOARD GPIO numbering
         GPIO.setmode(GPIO.BOARD)
         # Setup inputs and outputs
         for button in self.buttons:
             GPIO.setup(button, GPIO.IN)
-        GPIO.setup(LED, GPIO.OUT)
-        # Set initial LED state
-        GPIO.output(LED, True)        
+        GPIO.setup(LED, GPIO.OUT, initial=self.ledstate)
         # Add button callbacks and software debounce to avoid triggering it multiple times a second
         for button in self.buttons:
             GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
         
     def handle_button_press(self, channel):
-        if not GPIO.input(LED):
+        if not self.ledstate:
             print 'light is on already, skipping button press'
             return
         print 'light is off, registering button press'
@@ -48,10 +46,8 @@ class Main():
         Timer(10, self.change_LED_state).start()
          
     def change_LED_state(self):
-        if GPIO.input(LED):
-            GPIO.output(LED, False)
-        else:
-            GPIO.output(LED, True)
+        self.ledstate = not self.ledstate
+        GPIO.output(LED, self.ledstate)
 
     def print_button_states(self):
         for button in self.buttons:
