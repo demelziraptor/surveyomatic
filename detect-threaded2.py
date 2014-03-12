@@ -95,10 +95,10 @@ if __name__ == '__main__':
     t.start()
 
     # wait for queue to get empty
-    loggingqueue.join()
+    logging_queue.join()
      
     try:
-        Main(loggingqueue)
+        Main(logging_queue)
         while True:
             sleep(60)
     except:
