@@ -1,8 +1,9 @@
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 from time import sleep
 from datetime import datetime
 from threading import Timer
-
+import threading
+import Queue
 
 # Define component pins
 BUTTON1 = 15
@@ -16,6 +17,8 @@ LOGGING = True
 
 class Main():
 
+    import RPi.GPIO as GPIO
+
     def __init__(self, logging_queue):
         # Keep track of LED state (as GPIO.input not working)
         self.ledstate = True
@@ -25,6 +28,7 @@ class Main():
         self.setup_GPIO()
 
     def setup_GPIO(self):
+        GPIO.cleanup()
         # Set's GPIO pins to BOARD GPIO numbering
         GPIO.setmode(GPIO.BOARD)
         # Setup inputs and outputs
