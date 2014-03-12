@@ -16,9 +16,10 @@ LOGGING = True
 
 class Main():
 
-    def __init__(self):
+    def __init__(self, logging_queue):
         # Keep track of LED state (as GPIO.input not working)
         self.ledstate = True
+        self.logging_queue = logging_queue
         self.buttons = [BUTTON1, BUTTON2, BUTTON3]
         self.button_names = {BUTTON1: 'green', BUTTON2: 'yellow', BUTTON3: 'red'}
         self.setup_GPIO()
@@ -56,6 +57,16 @@ class Main():
     def log_button_press(self, button_name):
         if not LOGGING:
             return
+        self.logging_queue.put(button_name)
+            
+            
+
+class LoggingThread(threading.Thread):
+    def __init__(self, queue):
+        threading.Thread.__init__(self)
+        self.queue = queue
+
+    def log(self, button_name):
         logfile = "{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "The {bn} button was pressed at {t}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         try:
@@ -63,15 +74,38 @@ class Main():
                 f.write(text + '\n')
         except:
             print "Could not open log file for writing"
-
-
-if __name__ == '__main__':
-    print 'starting'
-    try:
-        Main()
+    
+    def run(self):
         while True:
-            sleep(60)
-    except:
-        raise
-    finally:
-        GPIO.cleanup()
+            button_name = self.queue.get()
+            self.log(button_name)
+            self.queue.task_done()
+
+class ProcessThread(threading.Thread):
+    def __init__(self, processing_queue, logging_queue):
+        threading.Thread.__init__(self)
+        self.processing_queue = processing_queue
+        self.logging_queue = logging_queue
+
+    def run(self):
+        while True:
+            Main(self.logging_queue)
+            self.processing_queue.task_done()
+
+processingqueue = Queue.Queue()
+loggingqueue = Queue.Queue()
+
+
+# spawn thread for main program
+t = ProcessThread(processingqueue, loggingqueue)
+t.setDaemon(True)
+t.start()
+
+# spawn threads for logging
+t = LoggingThread(loggingqueue)
+t.setDaemon(True)
+t.start()
+
+# wait for queue to get empty
+processingqueue.join()
+loggingqueue.join()
