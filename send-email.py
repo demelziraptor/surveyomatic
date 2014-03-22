@@ -7,10 +7,10 @@ PROGRAMLOG = '/var/log/surveyomatic.log'
 SUBJECT = 'Surveyomatic Weekly Log File'
 FROM = 'pi@lucidica.com'
 TO = 'demelza.buckham@lucidica.com'
-LOGFILE = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
+LOGFILE = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1]-1)
 
 try:
-    with open(LOGFILE, 'rb') as f:
+    with open(LOGFILE, 'r') as f:
         msg = MIMEText(f.read())
 except:
     with open(PROGRAMLOG, 'a') as f:
