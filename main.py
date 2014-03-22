@@ -69,8 +69,8 @@ class LoggingThread(threading.Thread):
         self.queue = queue
 
     def log(self, button_name):
-        logfile = "{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
-        text = "The {bn} button was pressed at {t}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
+        text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         try:
             with open(logfile, 'a') as f:
                 f.write(text + '\n')
