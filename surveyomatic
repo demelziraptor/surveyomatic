@@ -15,7 +15,7 @@ PIDFILE=/var/run/surveyomatic.pid
 LOGFILE=/var/log/surveyomatic.log
  
 start() {
-  if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
+  if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE"); then
     echo 'Service already running' >&2
     return 1
   fi
@@ -36,7 +36,7 @@ stop() {
 }
 
 status() {
-  if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
+  if [ -f "$PIDFILE" ] && kill -0 $(cat "$PIDFILE"); then
     echo 'Service is running' >&2
   else
     echo 'Service is not running' >&2
