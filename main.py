@@ -26,7 +26,7 @@ class Main():
         self.setup_GPIO()
 
     def setup_GPIO(self):
-        GPIO.cleanup()
+        GPIO.setwarnings(False)
         # Set's GPIO pins to BOARD GPIO numbering
         GPIO.setmode(GPIO.BOARD)
         # Setup inputs and outputs
