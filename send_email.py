@@ -13,16 +13,17 @@ LOGFILE = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = 
 
 class SendEmail():
 
-    def __init__(subject=SUBJECT,sender=FROM,to=TO):
-        
-        try:
-            with open(LOGFILE, 'r') as f:
-                msg = MIMEText(f.read())
-        except:
-            with open(PROGRAMLOG, 'a') as f:
-                f.write('Could not open log file for emailing' + '\n')
-            exit(0)
-
+    def __init__(subject=SUBJECT,msg='',sender=FROM,to=TO):
+        if msg == 'SENDLOG':
+            try:
+                with open(LOGFILE, 'r') as f:
+                    msg = MIMEText(f.read())
+            except:
+                with open(PROGRAMLOG, 'a') as f:
+                    f.write('Could not open log file for emailing' + '\n')
+                exit(0)
+        else:
+            msg = MIMEText(msg)
         msg['Subject'] = subject
         msg['From'] = sender
         msg['To'] = to
@@ -32,4 +33,4 @@ class SendEmail():
         s.quit()
 
 if __name__ == '__main__':
-    SendEmail()
+    SendEmail(msg='SENDLOG')
