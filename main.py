@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from datetime import datetime
 from threading import Timer
+from send-email import SendEmail
 import threading
 import Queue
 
@@ -69,6 +70,7 @@ class LoggingThread(threading.Thread):
         self.queue = queue
 
     def log(self, button_name):
+        SendEmail(subject='The {bn} button was pressed!'.format(bn = button_name))
         logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         try:
