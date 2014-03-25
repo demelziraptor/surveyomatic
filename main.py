@@ -74,11 +74,13 @@ class LoggingThread(threading.Thread):
         SendEmail(email_subject)
         logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        print "logfile is:", logfile
         try:
             with open(logfile, 'a') as f:
                 f.write(text + '\n')
         except Exception, e:
-            print "Could not open log file for writing. Error:", str(e)
+            t = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+            print t, "Could not open log file for writing. Error:", str(e)
     
     def run(self):
         while True:
