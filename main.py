@@ -12,9 +12,9 @@ BUTTON2 = 11
 BUTTON3 = 16
 LED = 12
 
-# Logging control
+# Logging and individual email control
 LOGGING = True
-
+EMAIL_EACH_PRESS = True
 
 class Main():
 
@@ -58,8 +58,6 @@ class Main():
             print int(GPIO.input(button))
             
     def log_button_press(self, button_name):
-        if not LOGGING:
-            return
         self.logging_queue.put(button_name)
             
             
@@ -70,8 +68,11 @@ class LoggingThread(threading.Thread):
         self.queue = queue
 
     def log(self, button_name):
-        email_subject = 'The {bn} button was pressed!'.format(bn = button_name)
-        SendEmail(email_subject)
+        if EMAIL_EACH_PRESS:
+            email_subject = 'The {bn} button was pressed!'.format(bn = button_name)
+            SendEmail(email_subject)
+        if not LOGGING:
+            return
         logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         print "logfile is:", logfile
