@@ -1,29 +1,24 @@
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
-
-
-PROGRAMLOG = '/var/log/surveyomatic.log'
-
-FROM = 'pi@lucidica.com'
-TO = 'demelza.buckham@lucidica.com'
-LOGFILE = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1]-1)
+from main import log_action
+import config
 
 
 def get_log_contents():
+    logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1]-1)
     try:
-        with open(LOGFILE, 'r') as f:
+        with open(logfile, 'r') as f:
             msg = MIMEText(f.read())
     except:
-        with open(PROGRAMLOG, 'a') as f:
-            f.write('Could not open log file for emailing' + '\n')
+        log_action('Could not open log file for emailing')
         exit(0)
     return msg
     
 
 class SendEmail():
 
-    def __init__(self, subject='Surveyomatic email',contents='',sender=FROM,recipient=TO):
+    def __init__(self, subject='Surveyomatic email',contents='',sender=config.DEFAULT_FROM,recipient=config.DEFAULT_TO):
         
         msg = MIMEText(contents)
         msg['Subject'] = subject

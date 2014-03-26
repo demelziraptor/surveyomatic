@@ -3,29 +3,19 @@ from time import sleep
 from datetime import datetime
 from threading import Timer
 from send_email import SendEmail
-from monitor_service import log_action
 import threading
 import Queue
+import config
 
-# Define component pins
-BUTTON1 = 15
-BUTTON2 = 11
-BUTTON3 = 16
-LED = 12
-
-# Logging and individual email control
-LOGGING = True
-PROGRAMLOG = '/var/log/surveyomatic.log'
-EMAIL_EACH_PRESS = True
 
 class Main():
 
     def __init__(self, logging_queue):
-        # Keep track of LED state (as GPIO.input not working)
+        # Keep track of config.LED state (as GPIO.input not working)
         self.ledstate = True
         self.logging_queue = logging_queue
-        self.buttons = [BUTTON1, BUTTON2, BUTTON3]
-        self.button_names = {BUTTON1: 'green', BUTTON2: 'yellow', BUTTON3: 'red'}
+        self.buttons = [config.BUTTON1, config.BUTTON2, config.BUTTON3]
+        self.button_names = {config.BUTTON1: 'green', config.BUTTON2: 'yellow', config.BUTTON3: 'red'}
         self.setup_GPIO()
 
     def setup_GPIO(self):
@@ -35,23 +25,23 @@ class Main():
         # Setup inputs and outputs
         for button in self.buttons:
             GPIO.setup(button, GPIO.IN)
-        GPIO.setup(LED, GPIO.OUT, initial=self.ledstate)
-        # Add button callbacks and software debounce to avoid triggering it multiple times a second
+        GPIO.setup(config.LED, GPIO.OUT, initial=self.ledstate)
+        # Add config.BUTTON callbacks and software debounce to avoid triggering it multiple times a second
         for button in self.buttons:
             GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
         
     def handle_button_press(self, channel):
         if not self.ledstate:
             return
-        self.change_LED_state()
+        self.change_led_state()
         button_name = self.button_names[channel]
         self.log_button_press(button_name)
         log_action("You pressed the {bn} button".format(bn = button_name))
-        Timer(10, self.change_LED_state).start()
+        Timer(10, self.change_led_state).start()
          
-    def change_LED_state(self):
+    def change_led_state(self):
         self.ledstate = not self.ledstate
-        GPIO.output(LED, self.ledstate)
+        GPIO.output(config.LED, self.ledstate)
 
     def log_button_press(self, button_name):
         self.logging_queue.put(button_name)
@@ -64,10 +54,10 @@ class LoggingThread(threading.Thread):
         self.queue = queue
 
     def log(self, button_name):
-        if EMAIL_EACH_PRESS:
+        if config.EMAIL_EACH_PRESS:
             email_subject = 'The {bn} button was pressed!'.format(bn = button_name)
             SendEmail(email_subject)
-        if not LOGGING:
+        if not config.LOGGING:
             return
         logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -84,12 +74,17 @@ class LoggingThread(threading.Thread):
             self.queue.task_done()
 
 
+def log_action(action):
+    with open(config.PROGRAMLOG, 'a') as f:
+        text = "{t} - {a}".format(t = datetime.now().strftime('%Y/%m/%d %H:%M:%S'), a = action)
+        f.write(text + '\n')
+
 
 if __name__ == '__main__':
     log_action("Starting up surveyomatic")
     logging_queue = Queue.Queue()
 
-    # spawn threads for logging
+    # spawn threads for config.LOGGING
     t = LoggingThread(logging_queue)
     t.setDaemon(True)
     t.start()
