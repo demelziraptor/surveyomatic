@@ -66,10 +66,8 @@ def main():
     # not reached restart limit, restart
     if restart_process():
         exit(0)
-    # could do something here; send email etc    
 
 
 if __name__ == "__main__":
     main()
-    exit(0)
 

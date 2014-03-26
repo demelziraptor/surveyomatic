@@ -31,9 +31,7 @@ class SendEmail():
         msg['To'] = recipient
 
         s = smtplib.SMTP('10.0.30.99')
-        print str(msg)
-        exit(0)
-        s.sendmail(sender, to, msg.as_string())
+        s.sendmail(sender, recipient, msg.as_string())
         s.quit()
 
 

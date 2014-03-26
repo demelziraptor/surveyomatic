@@ -3,6 +3,7 @@ from time import sleep
 from datetime import datetime
 from threading import Timer
 from send_email import SendEmail
+from monitor_service import log_action
 import threading
 import Queue
 
@@ -14,6 +15,7 @@ LED = 12
 
 # Logging and individual email control
 LOGGING = True
+PROGRAMLOG = '/var/log/surveyomatic.log'
 EMAIL_EACH_PRESS = True
 
 class Main():
@@ -40,23 +42,17 @@ class Main():
         
     def handle_button_press(self, channel):
         if not self.ledstate:
-            print 'light is on already, skipping button press'
             return
-        print 'light is off, registering button press'
         self.change_LED_state()
         button_name = self.button_names[channel]
         self.log_button_press(button_name)
-        print "You pressed the {bn} button".format(bn = button_name)
+        log_action("You pressed the {bn} button".format(bn = button_name))
         Timer(10, self.change_LED_state).start()
          
     def change_LED_state(self):
         self.ledstate = not self.ledstate
         GPIO.output(LED, self.ledstate)
 
-    def print_button_states(self):
-        for button in self.buttons:
-            print int(GPIO.input(button))
-            
     def log_button_press(self, button_name):
         self.logging_queue.put(button_name)
             
@@ -75,13 +71,11 @@ class LoggingThread(threading.Thread):
             return
         logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
         text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        print "logfile is:", logfile
         try:
             with open(logfile, 'a') as f:
                 f.write(text + '\n')
         except Exception, e:
-            t = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
-            print t, "Could not open log file for writing. Error:", str(e)
+            log_action("Could not open log file for writing. Error: "+str(e))
     
     def run(self):
         while True:
@@ -92,7 +86,7 @@ class LoggingThread(threading.Thread):
 
 
 if __name__ == '__main__':
-    print 'starting'
+    log_action("Starting up surveyomatic")
     logging_queue = Queue.Queue()
 
     # spawn threads for logging
@@ -111,3 +105,4 @@ if __name__ == '__main__':
         raise
     finally:
         GPIO.cleanup()
+        log_action("Exiting surveyomatic")
