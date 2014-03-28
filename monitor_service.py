@@ -1,7 +1,7 @@
 import os
 import subprocess
 from datetime import datetime
-from send_email import SendEmail
+import send_email
 from main import log_action
 import config
     
@@ -31,7 +31,7 @@ def should_restart():
                 if times == 3:
                     # restarted 3 times today already, exit
                     log_action('Already restarted 3 times today, exiting')
-                    SendEmail('Surveyomatic has been restarted 3 times already today, it will not be restarted again')
+                    send_email.SendEmail('Surveyomatic has been restarted 3 times already today, it will not be restarted again')
                     return False
     with open(config.RESTARTLOG, 'w') as f:
         times += 1
