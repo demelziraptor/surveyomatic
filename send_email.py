@@ -6,7 +6,9 @@ import config
 
 
 def get_log_contents():
-    logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1]-1)
+    logfile = "logs/{y}_week-{w}.log".format(
+        y=datetime.now().strftime('%Y'),
+        w=datetime.now().isocalendar()[1]-1)
     try:
         with open(logfile, 'r') as f:
             msg = MIMEText(f.read())
@@ -14,12 +16,17 @@ def get_log_contents():
         log_action('Could not open log file for emailing')
         exit(0)
     return msg
-    
+
 
 class SendEmail():
 
-    def __init__(self, subject='Surveyomatic email',contents='',sender=config.DEFAULT_FROM,recipient=config.DEFAULT_TO):
-        
+    def __init__(
+            self,
+            subject='Surveyomatic email',
+            contents='',
+            sender=config.DEFAULT_FROM,
+            recipient=config.DEFAULT_TO):
+
         msg = MIMEText(contents)
         msg['Subject'] = subject
         msg['From'] = sender
@@ -31,4 +38,4 @@ class SendEmail():
 
 
 if __name__ == '__main__':
-    SendEmail('Surveyomatic Weekly Log File',get_log_contents())
+    SendEmail('Surveyomatic Weekly Log File', get_log_contents())

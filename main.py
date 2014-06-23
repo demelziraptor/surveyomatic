@@ -15,7 +15,10 @@ class Main():
         self.ledstate = True
         self.logging_queue = logging_queue
         self.buttons = [config.BUTTON1, config.BUTTON2, config.BUTTON3]
-        self.button_names = {config.BUTTON1: 'green', config.BUTTON2: 'yellow', config.BUTTON3: 'red'}
+        self.button_names = {
+            config.BUTTON1: 'green',
+            config.BUTTON2: 'yellow',
+            config.BUTTON3: 'red'}
         self.setup_GPIO()
 
     def setup_GPIO(self):
@@ -26,27 +29,30 @@ class Main():
         for button in self.buttons:
             GPIO.setup(button, GPIO.IN)
         GPIO.setup(config.LED, GPIO.OUT, initial=self.ledstate)
-        # Add config.BUTTON callbacks and software debounce to avoid triggering it multiple times a second
+        # Add config.BUTTON callbacks and software debounce
         for button in self.buttons:
-            GPIO.add_event_detect(button, GPIO.FALLING, callback=self.handle_button_press, bouncetime=5000)
-        
+            GPIO.add_event_detect(
+                button,
+                GPIO.FALLING,
+                callback=self.handle_button_press,
+                bouncetime=5000)
+
     def handle_button_press(self, channel):
         if not self.ledstate:
             return
         self.change_led_state()
         button_name = self.button_names[channel]
         self.log_button_press(button_name)
-        log_action("You pressed the {bn} button".format(bn = button_name))
+        log_action("You pressed the {bn} button".format(bn=button_name))
         Timer(10, self.change_led_state).start()
-         
+
     def change_led_state(self):
         self.ledstate = not self.ledstate
         GPIO.output(config.LED, self.ledstate)
 
     def log_button_press(self, button_name):
         self.logging_queue.put(button_name)
-            
-            
+
 
 class LoggingThread(threading.Thread):
     def __init__(self, queue):
@@ -55,18 +61,23 @@ class LoggingThread(threading.Thread):
 
     def log(self, button_name):
         if config.EMAIL_EACH_PRESS:
-            email_subject = 'The {bn} button was pressed!'.format(bn = button_name)
+            email_subject = 'The {bn} button was pressed!'.format(
+                bn=button_name)
             send_email.SendEmail(email_subject)
         if not config.LOGGING:
             return
-        logfile = "logs/{y}_week-{w}.log".format(y = datetime.now().strftime('%Y'), w = datetime.now().isocalendar()[1])
-        text = "{t} | {bn}".format(bn = button_name, t = datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        logfile = "logs/{y}_week-{w}.log".format(
+            y=datetime.now().strftime('%Y'),
+            w=datetime.now().isocalendar()[1])
+        text = "{t} | {bn}".format(
+            bn=button_name,
+            t=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         try:
             with open(logfile, 'a') as f:
                 f.write(text + '\n')
         except Exception, e:
             log_action("Could not open log file for writing. Error: "+str(e))
-    
+
     def run(self):
         while True:
             button_name = self.queue.get()
@@ -76,22 +87,22 @@ class LoggingThread(threading.Thread):
 
 def log_action(action):
     with open(config.PROGRAMLOG, 'a') as f:
-        text = "{t} - {a}".format(t = datetime.now().strftime('%Y/%m/%d %H:%M:%S'), a = action)
+        text = "{t} - {a}".format(
+            t=datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+            a=action)
         f.write(text + '\n')
 
 
 if __name__ == '__main__':
     log_action("Starting up surveyomatic")
-    logging_queue = Queue.Queue()
 
-    # spawn threads for config.LOGGING
+    logging_queue = Queue.Queue()
     t = LoggingThread(logging_queue)
     t.setDaemon(True)
     t.start()
 
-    # wait for queue to get empty
     logging_queue.join()
-     
+
     try:
         Main(logging_queue)
         while True:
