@@ -1,7 +1,7 @@
 surveyomatic
 ============
 
-RPi Project.
+RPi Project.  Uses RPi.GPIO to control GPIO device.
 
 
 Installation
