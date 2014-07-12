@@ -14,11 +14,11 @@ class Main():
         # Keep track of config.LED state (as GPIO.input not working)
         self.ledstate = True
         self.logging_queue = logging_queue
-        self.buttons = [config.BUTTON1, config.BUTTON2, config.BUTTON3]
         self.button_names = {
             config.BUTTON1: 'green',
             config.BUTTON2: 'yellow',
             config.BUTTON3: 'red'}
+        self.buttons = self.button_names.keys()
         self.setup_GPIO()
 
     def setup_GPIO(self):
