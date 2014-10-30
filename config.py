@@ -11,6 +11,7 @@ LOGGING = True
 EMAIL_EACH_PRESS = False
 DEFAULT_FROM = 'pi@lucidica.com'
 DEFAULT_TO = 'demelza.buckham@lucidica.com'
+SMTP_IP = '10.0.30.99'
 
 # Program settings
 # (any changes must also be made to sysvinit and logrotate scripts)

@@ -32,7 +32,7 @@ class SendEmail():
         msg['From'] = sender
         msg['To'] = recipient
 
-        s = smtplib.SMTP('10.0.30.99')
+        s = smtplib.SMTP(config.SMTP_IP)
         s.sendmail(sender, recipient, msg.as_string())
         s.quit()
 
