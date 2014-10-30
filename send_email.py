@@ -5,10 +5,14 @@ import main
 import config
 
 
-def get_log_contents():
-    logfile = "logs/{y}_week-{w}.log".format(
-        y=datetime.now().strftime('%Y'),
-        w=datetime.now().isocalendar()[1]-1)
+def get_log_contents(current=False):
+    """ Emails log file from last week, or current if specified """
+    year = datetime.now().strftime('%Y')
+    if current:
+        week = datetime.now().isocalendar()[1]
+    else:
+        week = datetime.now().isocalendar()[1]-1
+    logfile = "logs/{y}_week-{w}.log".format(y=year, w=week)
     try:
         with open(logfile, 'r') as f:
             msg = MIMEText(f.read())
@@ -38,4 +42,10 @@ class SendEmail():
 
 
 if __name__ == '__main__':
-    SendEmail('Surveyomatic Weekly Log File', get_log_contents())
+    current = False
+    try:
+        if sys.argv[1] == 'current':
+            current = True
+    except:
+        pass
+    SendEmail('Surveyomatic Weekly Log File', get_log_contents(current))
