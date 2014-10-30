@@ -14,6 +14,7 @@ Installation
   `mkdir /path/to/surveyomatic/logs`
 
 ### Set up the service ###
+- Ensure the correct paths in `SCRIPT` variable in the surveyomatic-sysvinit file
 - Set up correct permissions on the sysvinit file  
   `chmod 755 /path/to/surveyomatic-sysvinit`
 - Symlink the sysvinit file (surveyomatic) to /etc/init.d  
@@ -23,6 +24,7 @@ Installation
    `sudo update-rc.d surveyomatic defaults`
 
 ### Set up emailing ###
+- Modify the `DEFAULT_FROM` and `DEFAULT_TO` in config.py, and also set `EMAIL_EACH_PRESS = True` if you want to turn this feature on for testing
 - Add a cron job to run the send_email.py script as often as you like (default weekly)  
   `crontab -l > file; echo '02 00 * * 1 python /path/to/send_email.py >/dev/null 2>&1' >> file; crontab file`
 - If not running weekly, need to change two files in addition to the cron schedule:
@@ -36,6 +38,7 @@ Installation
     `02 0 * * *`
     
 ### Set up service monitoring ###
+- Set the `RESTARTLOG` in config.py to point to your surveyomatic directory
 - Add a cron job to run the monitor script as often as you like, eg for every 5 minutes:  
   `echo "*/5 * * * * root python /path/to/monitor_service.py" >> /etc/crontab`  
 (This is different to the cron line above as it needs to run as root rather than a normal user account)

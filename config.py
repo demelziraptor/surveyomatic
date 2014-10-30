@@ -8,7 +8,7 @@ LED = 12
 LOGGING = True
 
 # Emailing
-EMAIL_EACH_PRESS = True
+EMAIL_EACH_PRESS = False
 DEFAULT_FROM = 'pi@lucidica.com'
 DEFAULT_TO = 'demelza.buckham@lucidica.com'
 
@@ -16,4 +16,4 @@ DEFAULT_TO = 'demelza.buckham@lucidica.com'
 # (any changes must also be made to sysvinit and logrotate scripts)
 PIDFILE = '/var/run/surveyomatic.pid'
 PROGRAMLOG = '/var/log/surveyomatic.log'
-RESTARTLOG = '/home/pi/demelziraptor/surveyomatic/restartcount.log'
+RESTARTLOG = '/home/pi/surveyomatic/restartcount.log'

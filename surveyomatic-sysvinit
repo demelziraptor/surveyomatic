@@ -8,7 +8,7 @@
 # Description:       controlling the survey box
 ### END INIT INFO
  
-SCRIPT='cd /home/pi/demelziraptor/surveyomatic;python /home/pi/demelziraptor/surveyomatic/main.py'
+SCRIPT='cd /home/pi/surveyomatic;python /home/pi/surveyomatic/main.py'
 RUNAS=root
  
 PIDFILE=/var/run/surveyomatic.pid
