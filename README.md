@@ -6,6 +6,13 @@ RPi Project.  Uses RPi.GPIO to control GPIO device.
 
 Installation
 ------------
+### Prerequisites ###
+- Install RPi.GPIO
+  `sudo apt-get install python-pip`
+  `pip install rpi.gpio`
+- Add directory for logs
+  `mkdir /path/to/surveyomatic/logs`
+
 ### Set up the service ###
 - Set up correct permissions on the sysvinit file  
   `chmod 755 /path/to/surveyomatic-sysvinit`
