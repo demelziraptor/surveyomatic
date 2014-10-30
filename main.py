@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from datetime import datetime
 from threading import Timer
-from send_email import SendEmail
+import send_email
 import threading
 import Queue
 import config
@@ -63,7 +63,7 @@ class LoggingThread(threading.Thread):
         if config.EMAIL_EACH_PRESS:
             email_subject = 'The {bn} button was pressed!'.format(
                 bn=button_name)
-            SendEmail(email_subject)
+            send_email.SendEmail(email_subject)
         if not config.LOGGING:
             return
         logfile = "logs/{y}_week-{w}.log".format(

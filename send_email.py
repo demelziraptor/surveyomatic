@@ -1,7 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime
-from main import log_action
+import main
 import config
 
 
@@ -13,7 +13,7 @@ def get_log_contents():
         with open(logfile, 'r') as f:
             msg = MIMEText(f.read())
     except:
-        log_action('Could not open log file for emailing')
+        main.log_action('Could not open log file for emailing')
         exit(0)
     return msg
 
